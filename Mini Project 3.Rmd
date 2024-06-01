@@ -1,0 +1,107 @@
+---
+title: "Linear Regression - Predicting Individual Medical Costs Billed by Health Insurance"
+author: "Name: INSERT NAME"
+subtitle: "Date: INSERT DATE"
+output: html_document
+---
+
+## Introduction
+"The United States’ national health expenditure (NHE) grew 5.8% to $3.2 trillion in 2015 (i.e., $9,990 per person), which accounted for 17.8% of the nation’s gross domestic product (GDP). In seeking to control these unsustainable increases in healthcare costs, it is imperative that healthcare organizations can predict the likely future costs of individuals, so that care management resources can be efficiently targeted to those individuals at highest risk of incurring significant costs. Key stakeholders in these efforts to manage healthcare costs include health insurers, employers, society, and increasingly healthcare delivery organizations due to the transition from fee-for-service payment models to value-based payment models. For any given individual, insurers generally have the most comprehensive information on healthcare costs as they pay for care delivered across various healthcare delivery organizations.
+
+Predicting healthcare costs for individuals using accurate prediction models is important for various stakeholders beyond health insurers, and for various purposes. For health insurers and increasingly healthcare delivery systems, accurate forecasts of likely costs can help with general business planning in addition to prioritizing the allocation of scarce care management resources. Moreover, for patients, knowing in advance their likely expenditures for the next year could potentially allow them to choose insurance plans with appropriate deductibles and premiums."
+
+Excerpt from https://www-ncbi-nlm-nih-gov.proxy-um.researchport.umd.edu/pmc/articles/PMC5977561/
+
+## Exploratory Data Analysis
+INSERT NARRATIVE HERE
+```{r warning=FALSE, message=FALSE, results="hide", include=FALSE}
+# Importing the insurance.csv file
+insurance <- read.csv("insurance.csv")
+
+# Finding the number of observations
+num_observations <- nrow(insurance)
+
+# Finding the number of variables
+num_variables <- ncol(insurance)
+
+# Finding the percentage of observations in each category for categorical variables
+percentage_children <- prop.table(table(insurance$children)) * 100
+percentage_smoker <- prop.table(table(insurance$smoker)) * 100
+percentage_region <- prop.table(table(insurance$region)) * 100
+
+# Finding the mean and standard deviation for continuous variables
+mean_age <- mean(insurance$age)
+std_dev_age <- sd(insurance$age)
+
+mean_bmi <- mean(insurance$bmi)
+std_dev_bmi <- sd(insurance$bmi)
+
+mean_charges <- mean(insurance$charges)
+std_dev_charges <- sd(insurance$charges)
+
+
+
+
+```
+
+## Data Visualization
+INSERT NARRATIVE HERE
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+# insert data visualization code here
+# Load necessary libraries
+library(ggplot2)
+
+# Boxplot for categorical variables
+# 1. Number of children
+ggplot(insurance, aes(factor(children), charges)) +
+  geom_boxplot() +
+  labs(x = "Number of Children", y = "Individual Medical Costs", title = "Boxplot of Individual Medical Costs by Number of Children (Figure 1)")
+
+# 2. Smoker
+ggplot(insurance, aes(smoker, charges)) +
+  geom_boxplot() +
+  labs(x = "Smoker", y = "Individual Medical Costs", title = "Boxplot of Individual Medical Costs by Smoking Status (Figure 2)")
+
+# 3. Region
+ggplot(insurance, aes(region, charges)) +
+  geom_boxplot() +
+  labs(x = "Region", y = "Individual Medical Costs", title = "Boxplot of Individual Medical Costs by Region (Figure 3)")
+
+# Scatterplot for continuous variables
+# 4. Age
+ggplot(insurance, aes(age, charges)) +
+  geom_point() +
+  labs(x = "Age", y = "Individual Medical Costs", title = "Scatterplot of Individual Medical Costs by Age (Figure 4)")
+
+# 5. BMI
+ggplot(insurance, aes(bmi, charges)) +
+  geom_point() +
+  labs(x = "BMI", y = "Individual Medical Costs", title = "Scatterplot of Individual Medical Costs by BMI (Figure 5)")
+
+# 6. Charges (not necessary as it's the outcome variable)
+
+
+```
+
+## Multiple Linear Regression Results
+INSERT NARRATIVE HERE
+```{r warning=FALSE, message=FALSE, results="hide", include=FALSE}
+# insert linear regression code
+
+# Build the multiple linear regression model
+model <- lm(charges ~ age + sex + bmi + children + smoker + region, data = insurance)
+
+# Display the summary of the model
+summary(model)
+
+```
+
+## Linear Regression Assumptions
+INSERT NARRATIVE HERE
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+# insert regression assumption plots code
+# Produce diagnostic plots for the linear regression model
+plot(model)
+
+```
+
